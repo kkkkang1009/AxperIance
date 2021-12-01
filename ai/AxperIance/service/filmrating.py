@@ -1,5 +1,5 @@
 ## make_filmrate_model : 크롤링 및 모델 생성을 수행한다.
-def make_filmrate_model(url, user_id, user_pw) :
+def make_filmrate_model(url, keyword, user_id, user_pw) :
     return False
 
 ## get_filmrate_prediction : 예상 평점을 return 한다.

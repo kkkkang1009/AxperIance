@@ -15,7 +15,7 @@ class FilmrateViewSet(viewsets.ModelViewSet):
 def filmrate_learning(request) :
     if request.method == 'POST' :
         jsonBody = JSONParser().parse(request)
-        result = filmrating.make_filmrate_model(jsonBody["url"], jsonBody["user_id"], jsonBody["user_pw"])
+        result = filmrating.make_filmrate_model(jsonBody["url"], jsonBody["keyword"], jsonBody["user_id"], jsonBody["user_pw"])
         return HttpResponse(result, status=200)
     else :
         return HttpResponse(status=404)
