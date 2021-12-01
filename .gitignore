@@ -24,3 +24,7 @@ yarn-error.log*
 
 
 /ai/.idea
+
+
+# notepad++
+*.bak
