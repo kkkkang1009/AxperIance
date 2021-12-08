@@ -46,7 +46,7 @@ def exportDataFromCrawling(url, keyword, user_id, user_pw) :
     driver.find_element_by_name('email').send_keys('bleachshot@gmail.com')
     driver.find_element_by_name('password').send_keys('dkfkqldk12!@')
     # TODO : syntax error
-    driver.find_element_by_class_name(\"css-qr0uqd-StylelessButton\").click()
+    driver.find_element_by_class_name("css-qr0uqd-StylelessButton").click()
     
     # 검색 리스트에서 클릭
     driver.find_element_by_xpath('//*[@id=\"root\"]/div/div[1]/section/section/div[3]/div[1]/section/section[1]/div/div[1]/div/ul/li[1]/a/div[1]/div[1]/img').click()
@@ -78,13 +78,13 @@ def exportDataFromCrawling(url, keyword, user_id, user_pw) :
     
     #return ""
     # TODO : syntax error
-    result = [[\"\" for col in range(2)] for row in range(data_size)]
+    result = [["" for col in range(2)] for row in range(data_size)]
     
-    for i in range(0,data_size):
+    for i in range(0, data_size):
       result[i][0] = comments[i].text
       result[i][1] = rates[i].text
     
-    for i in range(0,data_size):
+    for i in range(0, data_size):
       print(result[i][0])
       print(result[i][1])
     
