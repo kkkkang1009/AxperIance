@@ -1,2 +1,8 @@
+# server
 Django==3.2.9
 djangorestframework==3.12.4
+
+# crawling, modeling
+selenium==3.141
+chromedriver-autoinstaller==0.2.2
+pandas==1.3.4

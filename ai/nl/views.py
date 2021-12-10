@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.parsers import JSONParser
 from .serializers import FilmrateSerializer
 from .models import Filmrate
-from .service import filmrating
+from .filmrate import filmrating
 
 
 class FilmrateViewSet(viewsets.ModelViewSet):

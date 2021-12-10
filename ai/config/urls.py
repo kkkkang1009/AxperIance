@@ -1,4 +1,4 @@
-"""ai URL Configuration
+"""config URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import path
 #from django.conf.urls import url, include
 from rest_framework import routers
-#from AxperIance.views import FilmrateViewSet
-from AxperIance import views
+#from nl.views import FilmrateViewSet
+from nl import views
 
 #router = routers.DefaultRouter()
 #router.register('filmrate', FilmrateViewSet) # prefix = filmrate , viewset = FilmrateViewSet
