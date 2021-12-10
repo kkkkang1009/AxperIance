@@ -1,9 +1,9 @@
-from . import crawling
+from . import filmrate_crawling
 
 
 ## make_filmrate_model : 크롤링 및 모델 생성을 수행한다.
 def make_filmrate_model(url, keyword, user_id, user_pw) :
-    dataPath = crawling.exportDataFromCrawling(url, keyword, user_id, user_pw)
+    dataPath = filmrate_crawling.exportDataFromCrawling(url, keyword, user_id, user_pw)
     if dataPath != "" :
         return True
     else :
