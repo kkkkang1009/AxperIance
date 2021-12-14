@@ -4,22 +4,33 @@ from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.support.ui import WebDriverWait
 import time
+import os
 import pandas as pd
+from datetime import datetime
 import chromedriver_autoinstaller
 
 
-#NUM_PAGE_DOWN = 100
-NUM_PAGE_DOWN = 1
-
-WAIT_TIME = 2
+NUM_PAGE_DOWN = 100  # 리뷰 목록 확장 횟수
+WAIT_TIME = 1       # 각 단계마다 대기 시간
 
 
 def exportDataFromCrawling(url, keyword, user_id, user_pw):
-    base_url = 'https://pedia.watcha.com/ko-KR/search?query=%EC%A7%80%EA%B5%AC%EB%A5%BC%20%EC%A7%80%EC%BC%9C%EB%9D%BC&category=contents'
+    #base_url = 'https://pedia.watcha.com/ko-KR/search?query=%EC%A7%80%EA%B5%AC%EB%A5%BC%20%EC%A7%80%EC%BC%9C%EB%9D%BC&category=contents'
     
-    searchkeyword = '지구를 지켜라'
+    _keyword = keyword
     
-    base_url = 'https://pedia.watcha.com/ko-KR/search?query=' + searchkeyword + '&category=contents'
+    if _keyword == "" :
+        _keyword = "지구를 지켜라"    # sample
+        #return ""
+    
+    _user_id = user_id
+    _user_pw = user_pw
+    
+    if _user_id == "" or _user_pw == "" :
+        _user_id = "bleachshot@gmail.com"
+        _user_pw = "dkfkqldk12!@"
+    
+    base_url = 'https://pedia.watcha.com/ko-KR/search?query=' + _keyword + '&category=contents'
     
     pathChromeDriver = chromedriver_autoinstaller.install()
     
@@ -40,8 +51,8 @@ def exportDataFromCrawling(url, keyword, user_id, user_pw):
     time.sleep(WAIT_TIME)
     
     #로그인하기
-    driver.find_element_by_name('email').send_keys('bleachshot@gmail.com')
-    driver.find_element_by_name('password').send_keys('dkfkqldk12!@')
+    driver.find_element_by_name('email').send_keys(_user_id)
+    driver.find_element_by_name('password').send_keys(_user_pw)
     driver.find_element_by_class_name("css-qr0uqd-StylelessButton").click()
     
     time.sleep(WAIT_TIME)
@@ -89,7 +100,7 @@ def exportDataFromCrawling(url, keyword, user_id, user_pw):
     #comments = WebDriverWait(driver, WEBDRIVER_WAIT_TIMEOUT).until(EC.presence_of_element_located((By.XPATH, commentsXpath)))
     
     # 별점
-    ratesXpath = ' //*[@id=\"root\"]/div/div[1]/section/section/div/div/div/ul/div[*]/div[1]/div[2]/span'
+    ratesXpath = ' //*[@id="root"]/div/div[1]/section/section/div/div/div/ul/div[*]/div[1]/div[2]/span'
     rates = driver.find_elements_by_xpath(ratesXpath)
     #rates = WebDriverWait(driver, WEBDRIVER_WAIT_TIMEOUT).until(EC.presence_of_element_located((By.XPATH, ratesXpath)))
     
@@ -100,9 +111,15 @@ def exportDataFromCrawling(url, keyword, user_id, user_pw):
       result[i][0] = comments[i].text
       result[i][1] = rates[i].text
     
-    result_excel_path = "sample.xlsx"
+    keyword_nospace = _keyword.replace(" ","_")
+    datetime_now = datetime.now()
+    datetime_now_str = datetime_now.strftime("%Y%m%d_%H%M%S")
+    
+    current_path = os.getcwd() + "\\nl\\filmrate\\data"
+    result_excel_name = "filmrate_" + keyword_nospace + "_" + datetime_now_str + ".xlsx"
+    result_excel_path = current_path + "\\" + result_excel_name
+    
     result_excel = pd.DataFrame(result)
     result_excel.to_excel(excel_writer=result_excel_path)
     
     return result_excel_path
-
