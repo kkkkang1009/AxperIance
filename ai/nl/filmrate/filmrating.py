@@ -11,8 +11,10 @@ import numpy as np
 
 ## make_filmrate_model : 크롤링 및 모델 생성을 수행한다.
 def make_filmrate_model(url, keyword, user_id, user_pw) :
-    #dataPath = filmrate_crawling.exportDataFromCrawling(url, keyword, user_id, user_pw)
-    dataPath = ""
+    dataPath = filmrate_crawling.exportDataFromCrawling(url, keyword, user_id, user_pw)
+    
+    print(keyword + " csv : " + dataPath)
+    
     if dataPath != "" :
         return True
     else :
