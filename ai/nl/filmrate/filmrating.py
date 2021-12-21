@@ -8,6 +8,7 @@ import h5py
 import pickle
 
 import numpy as np
+from  tensorflow.keras  import backend 
 
 
 ## make_filmrate_model : 크롤링 및 모델 생성을 수행한다.
@@ -20,6 +21,18 @@ def make_filmrate_model(url, keyword, user_id, user_pw) :
         return True
     else :
         return False
+## 손실 함수     
+def loss_score(y_true,y_pred):
+    loss = float(0)
+    ln = len(y_true)
+    for i in range(ln) :
+        loss_y = float(0)
+        for j in range(10) :
+            loss_y = loss_y + (j+1)/10 * (y_pred[i][j] - y_true[i][j]) 
+        
+        loss = loss + backend.abs(loss_y)
+    loss = loss/float(ln)
+    return loss
 
 def sentiment_predict(new_sentence):
     okt = Okt()
