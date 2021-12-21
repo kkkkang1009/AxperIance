@@ -28,7 +28,7 @@ def sentiment_predict(new_sentence):
         tokenizer = pickle.load(handle)
 
     model_file = h5py.File('nl/filmrate/filmrate_model_01.h5', 'r')
-    new_model = load_model(model_file)
+    model = load_model(model_file)
 
     stopwords = ['의','가','이','은','들','는','좀','잘','걍','과','도','를','으로','자','에','와','한','하다']
     new_sentence = okt.morphs(new_sentence, stem=True) # 토큰화
