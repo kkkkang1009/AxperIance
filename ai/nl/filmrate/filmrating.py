@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from konlpy.tag import Komoran, Hannanum, Kkma, Okt
 import h5py
+import pickle
 
 import numpy as np
 
@@ -22,9 +23,11 @@ def make_filmrate_model(url, keyword, user_id, user_pw) :
 
 def sentiment_predict(new_sentence):
     okt = Okt()
-    tokenizer = Tokenizer()
+    # loading
+    with open('nl/filmrate/filmrate_tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
 
-    model_file = h5py.File('nl/filmrate/filmrate.h5', 'r')
+    model_file = h5py.File('nl/filmrate/filmrate_model_01.h5', 'r')
     new_model = load_model(model_file)
 
     stopwords = ['의','가','이','은','들','는','좀','잘','걍','과','도','를','으로','자','에','와','한','하다']
@@ -32,9 +35,11 @@ def sentiment_predict(new_sentence):
     new_sentence = [word for word in new_sentence if not word in stopwords] # 불용어 제거
     encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
     pad_new = pad_sequences(encoded, maxlen = 100) # 패딩
-    score = new_model.predict(pad_new)# 예측
+    score1 = 0
+    for i in range(10) :
+      score1 += model.predict(pad_new)[0][i] * (i+1) # 예측
     
-    return score.argmax()/2
+    return score1/2
 
 
 ## get_filmrate_prediction : 예상 평점을 return 한다.
