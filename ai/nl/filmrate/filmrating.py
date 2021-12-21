@@ -23,9 +23,9 @@ def make_filmrate_model(url, keyword, user_id, user_pw):
 def loss_score(y_true, y_pred):
     loss = float(0)
     ln = len(y_true)
-    for i in range(ln) :
+    for i in range(ln):
         loss_y = float(0)
-        for j in range(10) :
+        for j in range(10):
             loss_y = loss_y + (j+1)/10 * (y_pred[i][j] - y_true[i][j])
         loss = loss + backend.abs(loss_y)
     loss = loss/float(ln)
@@ -39,7 +39,8 @@ def sentiment_predict(sentence):
         tokenizer = pickle.load(handle)
     # model load with custom loss
     model_file = h5py.File('nl/filmrate/filmrate_model_01.h5', 'r')
-    model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
+    # model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
+    model = load_model(model_file, compile=False)
 
     stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
     sentence = okt.morphs(sentence, stem=True)  # 토큰화
@@ -51,7 +52,7 @@ def sentiment_predict(sentence):
     for i in range(10):
       score += model.predict(pad)[0][i] * (i+1)    # 예측
     
-    return score/2
+    return round(score)/2.0
 
 
 # get_filmrate_prediction : 예상 평점을 return 한다.
