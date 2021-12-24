@@ -35,10 +35,10 @@ def loss_score(y_true, y_pred):
 def sentiment_predict(sentence):
     okt = Okt()
     # tokenizer load
-    with open('nl/filmrate/filmrate_tokenizer.pickle', 'rb') as handle:
+    with open('nl/filmrate/tokenizer/filmrate_tokenizer.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
     # model load with custom loss
-    model_file = h5py.File('nl/filmrate/filmrate_model_01.h5', 'r')
+    model_file = h5py.File('nl/filmrate/model/filmrate_model_01.h5', 'r')
     # model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
     model = load_model(model_file, compile=False)
 

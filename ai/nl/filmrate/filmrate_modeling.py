@@ -13,7 +13,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
-data = pd.read_csv('/content/filmrate_data_ansi.csv', encoding='cp949')
+data = pd.read_csv('/nl/filmrate/data/filmrate_data_ansi.csv', encoding='cp949')
 text = data.iloc[:,[0,3,5]]
 random.seed(1)
 
