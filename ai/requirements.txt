@@ -1,6 +1,7 @@
 # server
 Django==3.2.9
 djangorestframework==3.12.4
+django-cors-headers==3.10.1
 
 # crawling, modeling
 selenium==3.141
