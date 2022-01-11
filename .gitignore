@@ -13,6 +13,8 @@
 # production
 /frontend/build
 
+/frontend/package-lock.json
+
 # misc
 .DS_Store
 .env.local
@@ -229,3 +231,5 @@ dmypy.json
 cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
+package-lock.json
