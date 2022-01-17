@@ -62,7 +62,7 @@ def get_filmrate_prediction(content):
     if type(content) is not str:
         return 0.0
     
-    if len(content) < 10:      # 최소 길이 제한
+    if len(content) < 5:      # 최소 길이 제한
         return 0.0
 
     prediction_rate = sentiment_predict(content)
