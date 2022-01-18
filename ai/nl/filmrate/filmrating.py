@@ -31,6 +31,20 @@ def loss_score(y_true, y_pred):
     loss = loss/float(ln)
     return loss
 
+# 손실 함수 (loss 벡터)
+def loss_score_v(y_true, y_pred):
+    loss = float(0)
+    ln = len(y_true)
+    for i in range(ln) :
+        loss_y = float(0)
+        for j in range(10) :
+            loss_y = loss_y + (y_pred[i][j] - y_true[i][j])**2 # 벡터변환 거리 
+        if loss_y != 0 :
+            loss = loss + (loss_y)**0.5
+
+    if loss != 0 :
+        loss = loss/float(ln*10)
+    return loss
 
 def sentiment_predict(sentence):
     okt = Okt()
@@ -54,6 +68,32 @@ def sentiment_predict(sentence):
     
     return round(score)/2.0
 
+# 손실 함수 (loss 벡터)
+def sentiment_predict_v(sentence):
+    okt = Okt()
+    # tokenizer load
+    with open('nl/filmrate/tokenizer/filmrate_tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+    # model load with custom loss
+    model_file = h5py.File('nl/filmrate/model/filmrate_model_01.h5', 'r')
+    # model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
+    model = load_model(model_file, compile=False)
+
+    stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
+    sentence = okt.morphs(sentence, stem=True)  # 토큰화
+    sentence = [word for word in sentence if not word in stopwords]     # 불용어 제거
+    encoded = tokenizer.texts_to_sequences([sentence])  # 정수 인코딩
+    pad = pad_sequences(encoded, maxlen=100)      # 패딩
+
+    score1 = 0
+    score2 = 0
+    #print(model.predict(pad_new)[0])
+    for i in range(10) :
+      if score1 < model.predict(pad_new)[0][i] :
+        score1 = model.predict(pad_new)[0][i]
+        score2 = (i+1)/2 # 예측
+    
+    return score2
 
 # get_filmrate_prediction : 예상 평점을 return 한다.
 # input : 리뷰 내용
