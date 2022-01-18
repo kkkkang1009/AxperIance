@@ -46,7 +46,8 @@ def loss_score_v(y_true, y_pred):
         loss = loss/float(ln*10)
     return loss
 
-def sentiment_predict(sentence):
+# loss_score / RMSprop 모델 v01
+def sentiment_predict_01(sentence):
     okt = Okt()
     # tokenizer load
     with open('nl/filmrate/tokenizer/filmrate_tokenizer.pickle', 'rb') as handle:
@@ -68,14 +69,41 @@ def sentiment_predict(sentence):
     
     return round(score)/2.0
 
-# 손실 함수 (loss 벡터)
-def sentiment_predict_v(sentence):
+# loss_score_v / RMSprop 모델 v02
+def sentiment_predict_02(sentence):
     okt = Okt()
     # tokenizer load
     with open('nl/filmrate/tokenizer/filmrate_tokenizer.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
     # model load with custom loss
-    model_file = h5py.File('nl/filmrate/model/filmrate_model_01.h5', 'r')
+    model_file = h5py.File('nl/filmrate/model/filmrate_model_02.h5', 'r')
+    # model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
+    model = load_model(model_file, compile=False)
+
+    stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
+    sentence = okt.morphs(sentence, stem=True)  # 토큰화
+    sentence = [word for word in sentence if not word in stopwords]     # 불용어 제거
+    encoded = tokenizer.texts_to_sequences([sentence])  # 정수 인코딩
+    pad = pad_sequences(encoded, maxlen=100)      # 패딩
+
+    score1 = 0
+    score2 = 0
+    #print(model.predict(pad_new)[0])
+    for i in range(10) :
+      if score1 < model.predict(pad_new)[0][i] :
+        score1 = model.predict(pad_new)[0][i]
+        score2 = (i+1)/2 # 예측
+    
+    return score2
+
+# loss_score_v / adam 모델 v03
+def sentiment_predict_03(sentence):
+    okt = Okt()
+    # tokenizer load
+    with open('nl/filmrate/tokenizer/filmrate_tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+    # model load with custom loss
+    model_file = h5py.File('nl/filmrate/model/filmrate_model_03.h5', 'r')
     # model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
     model = load_model(model_file, compile=False)
 
@@ -105,6 +133,8 @@ def get_filmrate_prediction(content):
     if len(content) < 5:      # 최소 길이 제한
         return 0.0
 
-    prediction_rate = sentiment_predict(content)
+    prediction_rate_01 = sentiment_predict_01(content)
+    prediction_rate_02 = sentiment_predict_02(content)
+    prediction_rate_03 = sentiment_predict_03(content)
     
     return prediction_rate
