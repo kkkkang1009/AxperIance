@@ -145,7 +145,7 @@ def sentiment_predict_04(sentence):
     score2 = 0
     #print(model.predict(pad))
 
-    return score.argmax()/2
+    return score1.argmax()/2
 
 # get_filmrate_prediction : 예상 평점을 return 한다.
 # input : 리뷰 내용

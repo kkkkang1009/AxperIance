@@ -39,7 +39,12 @@ class FilmRate extends Component {
                   modelId: 3,
                   modelName: "Model 03",
                   rate: 0.0,
-              }
+              },
+              {
+                modelId: 4,
+                modelName: "Model 04",
+                rate: 0.0,
+            }
           ]
         };
     }
