@@ -123,6 +123,30 @@ def sentiment_predict_03(sentence):
     
     return score2
 
+
+# v04
+def sentiment_predict_04(sentence):
+    okt = Okt()
+    # tokenizer load
+    with open('nl/filmrate/tokenizer/filmrate_tokenizer_04.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+    # model load with custom loss
+    model_file = h5py.File('nl/filmrate/model/filmrate_model_04.h5', 'r')
+    # model = load_model(model_file, custom_objects={'loss': loss_score(y_true, y_pred)})
+    model = load_model(model_file, compile=False)
+
+    stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
+    sentence = okt.morphs(sentence, stem=True)  # 토큰화
+    sentence = [word for word in sentence if not word in stopwords]     # 불용어 제거
+    encoded = tokenizer.texts_to_sequences([sentence])  # 정수 인코딩
+    pad = pad_sequences(encoded, maxlen=100)      # 패딩
+
+    score1 = model.predict(pad)
+    score2 = 0
+    #print(model.predict(pad))
+
+    return score.argmax()/2
+
 # get_filmrate_prediction : 예상 평점을 return 한다.
 # input : 리뷰 내용
 # output : 예상 평점
@@ -139,5 +163,7 @@ def get_filmrate_prediction(modelId, content):
         return sentiment_predict_02(content)
     elif modelId == 3:
         return sentiment_predict_03(content)
+    elif modelId == 4:
+        return sentiment_predict_04(content)
     
     return 0.0
