@@ -90,8 +90,8 @@ def sentiment_predict_02(sentence):
     score2 = 0
     #print(model.predict(pad_new)[0])
     for i in range(10) :
-      if score1 < model.predict(pad_new)[0][i] :
-        score1 = model.predict(pad_new)[0][i]
+      if score1 < model.predict(pad)[0][i] :
+        score1 = model.predict(pad)[0][i]
         score2 = (i+1)/2 # 예측
     
     return score2
@@ -117,8 +117,8 @@ def sentiment_predict_03(sentence):
     score2 = 0
     #print(model.predict(pad_new)[0])
     for i in range(10) :
-      if score1 < model.predict(pad_new)[0][i] :
-        score1 = model.predict(pad_new)[0][i]
+      if score1 < model.predict(pad)[0][i] :
+        score1 = model.predict(pad)[0][i]
         score2 = (i+1)/2 # 예측
     
     return score2
@@ -126,15 +126,18 @@ def sentiment_predict_03(sentence):
 # get_filmrate_prediction : 예상 평점을 return 한다.
 # input : 리뷰 내용
 # output : 예상 평점
-def get_filmrate_prediction(content):
+def get_filmrate_prediction(modelId, content):
     if type(content) is not str:
         return 0.0
     
     if len(content) < 5:      # 최소 길이 제한
         return 0.0
 
-    prediction_rate_01 = sentiment_predict_01(content)
-    prediction_rate_02 = sentiment_predict_02(content)
-    prediction_rate_03 = sentiment_predict_03(content)
+    if modelId == 1:
+        return sentiment_predict_01(content)
+    elif modelId == 2:
+        return sentiment_predict_02(content)
+    elif modelId == 3:
+        return sentiment_predict_03(content)
     
-    return prediction_rate
+    return 0.0

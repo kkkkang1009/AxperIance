@@ -25,7 +25,14 @@ def filmrate_learning(request):
 def filmrate_predict(request):
     if request.method == 'POST':
         jsonBody = JSONParser().parse(request)
-        result = filmrating.get_filmrate_prediction(jsonBody["content"])
-        return JsonResponse({"rate": result}, status=200)
+        modelId = jsonBody["modelId"]
+        result = filmrating.get_filmrate_prediction(modelId, jsonBody["content"])
+        jsonResult = {
+            "result": {
+                "modelId": modelId,
+                "rate": result
+            }
+        }
+        return JsonResponse(jsonResult, status=200)
     else:
         return HttpResponse(status=404)
