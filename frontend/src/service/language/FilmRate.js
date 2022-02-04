@@ -9,6 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 
@@ -29,22 +30,26 @@ class FilmRate extends Component {
                   modelId: 1,
                   modelName: "Model 01",
                   rate: 0.0,
+                  isLoading: false,
               },
               {
                   modelId: 2,
                   modelName: "Model 02",
                   rate: 0.0,
+                  isLoading: false,
               },
               {
                   modelId: 3,
                   modelName: "Model 03",
                   rate: 0.0,
+                  isLoading: false,
               },
               {
-                modelId: 4,
-                modelName: "Model 04",
-                rate: 0.0,
-            }
+                  modelId: 4,
+                  modelName: "Model 04",
+                  rate: 0.0,
+                  isLoading: false,
+              }
           ]
         };
     }
@@ -54,6 +59,19 @@ class FilmRate extends Component {
         })
     }
     evaluateComment(modelId) {
+        {
+            let _movieRates = [...this.state.movieRates];
+            _movieRates.forEach((movieRate) => {
+                if (movieRate.modelId === modelId) {
+                    movieRate.isLoading = true;
+                }
+            });
+
+            this.setState({
+                movieRates: _movieRates,
+            })
+        }
+
         fetch("http://127.0.0.1:8000/filmrate/predict", {
           method: "POST",
           headers: {
@@ -76,21 +94,25 @@ class FilmRate extends Component {
                     if (movieRate.modelId === modelId) {
                         movieRate.rate = rate;
                     }
+                    movieRate.isLoading = false;
                 });
 
                 this.setState({
-                    movieRates: _movieRates
+                    movieRates: _movieRates,
                 })
             }
         })
     }
 
     render() {
+        let tableBody;
+
+
         return (
             <div class="component">
                 <div class="section">
                     <TextField multiline size="small" label="Review" fontWeight="{500}"
-                    sx={{ minWidth:700, maxWidth: 750, minHeight:10 }}
+                    sx={{ minWidth:450, maxWidth: 450, minHeight:10 }}
                     inputProps={{style: {fontFamily: ['Malgun Gothic'], fontSize: 13, heigth: 22}}}
                     name="review" value={this.state.review} onChange={this.handleChange}>
                     </TextField>
@@ -119,15 +141,19 @@ class FilmRate extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.state.movieRates.map(({modelId, modelName, rate}) => (
+                        {this.state.movieRates.map(({modelId, modelName, rate, isLoading}) => (
                             <TableRow key={modelId}>
                                 <TableCell>{modelName}</TableCell>
                                 <TableCell>
                                     <Rating value={rate} precision={0.5} size={'large'} readOnly></Rating> ({rate})
                                 </TableCell>
                                 <TableCell>
-                                    <Button id={modelId} variant="contained" endIcon={<SendIcon />} size="middle" onClick={() => this.evaluateComment(modelId)}>
+                                    {/* <Button id={modelId} variant="outlined" endIcon={<SendIcon />} size="middle" onClick={() => this.evaluateComment(modelId)}>
                                         Start
+                                    </Button> */}
+                                    <Button id={modelId} variant="outlined" size="small"
+                                        onClick={() => this.evaluateComment(modelId)}>
+                                        {isLoading ? <CircularProgress size={20}></CircularProgress> : "Start"}
                                     </Button>
                                 </TableCell>
                             </TableRow>
