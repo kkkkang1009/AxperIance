@@ -1,7 +1,6 @@
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import SendIcon from '@mui/icons-material/Send';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,21 +9,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
-import PropTypes from 'prop-types';
+import InfoIcon from '@mui/icons-material/Info';
 import { Component } from 'react';
 
 class FilmRate extends Component {
-    // static MovieRate = {
-    //     modelName: PropTypes.string.isRequired,
-    //     rate: PropTypes.number.isRequired,
-    // };
-
     constructor(props) {
         super(props);
         this.evaluateComment = this.evaluateComment.bind(this);
 
         this.state = {
           review: "이 영화 진짜 존잼이다 하하하하핳",
+          showModelId: 0,
           movieRates: [
               {
                   modelId: 1,
@@ -58,6 +53,7 @@ class FilmRate extends Component {
             [e.target.name]: e.target.value
         })
     }
+
     evaluateComment(modelId) {
         {
             let _movieRates = [...this.state.movieRates];
@@ -104,32 +100,45 @@ class FilmRate extends Component {
         })
     }
 
+    showModelInfo(modelId) {
+        this.setState({
+            showModelId: modelId,
+        })
+    }
+    closeModelInfo() {
+        this.setState({
+            showModelId: 0,
+        })
+    }
+
+    handleKeyPress = (e) => {
+        this.closeModelInfo();
+    }
+
     render() {
-        let tableBody;
-
-
         return (
             <div class="component">
+                {
+                    this.state.showModelId > 0 ?
+                    <div class="popup" onKeyPress={this.handleKeyPress}>
+                        <div class="popupCloseButton">
+                            <Button variant="outlined" size="small" 
+                                onClick={() => this.closeModelInfo()}>
+                                Close
+                            </Button>
+                        </div>
+                    </div>
+                    :
+                    ""
+                }
                 <div class="section">
                     <TextField multiline size="small" label="Review" fontWeight="{500}"
                     sx={{ minWidth:450, maxWidth: 450, minHeight:10 }}
                     inputProps={{style: {fontFamily: ['Malgun Gothic'], fontSize: 13, heigth: 22}}}
                     name="review" value={this.state.review} onChange={this.handleChange}>
                     </TextField>
-                    {/* <div class="inline">
-                        <Button variant="contained" endIcon={<SendIcon />} 
-                            size="middle"
-                            onClick={this.evaluateComment}>Eval</Button>
-                    </div> */}
                 </div>
 
-                {/* <div class="section">
-                    <div>Expected Rate : {this.state.rate}</div>
-                    <div className="progress-div">
-                        <div style={{width: `${this.state.progress}%`}} className="progress"/>
-                    </div>
-                    <Rating value={this.state.rate} precision={0.5} size={'large'} readOnly></Rating>
-                </div> */}
                 <div class="section">
                 <TableContainer component={Paper} sx={{ minWidth: 350, maxWidth:700 }}>
                     <Table aria-label="simple table">
@@ -143,14 +152,16 @@ class FilmRate extends Component {
                     <TableBody>
                         {this.state.movieRates.map(({modelId, modelName, rate, isLoading}) => (
                             <TableRow key={modelId}>
-                                <TableCell>{modelName}</TableCell>
+                                <TableCell>
+                                    {modelName} 
+                                    <InfoIcon onClick={() => this.showModelInfo(modelId)} 
+                                        sx={{ fontSize: 15, marginLeft: 1, color: 'darkblue', cursor: 'Pointer' }}>
+                                    </InfoIcon>
+                                </TableCell>
                                 <TableCell>
                                     <Rating value={rate} precision={0.5} size={'large'} readOnly></Rating> ({rate})
                                 </TableCell>
                                 <TableCell>
-                                    {/* <Button id={modelId} variant="outlined" endIcon={<SendIcon />} size="middle" onClick={() => this.evaluateComment(modelId)}>
-                                        Start
-                                    </Button> */}
                                     <Button id={modelId} variant="outlined" size="small"
                                         onClick={() => this.evaluateComment(modelId)}>
                                         {isLoading ? <CircularProgress size={20}></CircularProgress> : "Start"}

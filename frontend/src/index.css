@@ -33,6 +33,27 @@ div.inline {
   margin-left: 5px;
 }
 
+.popup {
+  background-color: white;
+  z-index: 999;
+  width: 350px;
+  height: 365px;
+  position: absolute;
+  margin: 4px 41px;
+  border-radius: 4%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: darkgrey;
+  display: flex;
+  padding: 10px;
+}
+
+.popupCloseButton {
+  margin-left: auto;
+  margin-top: auto;
+  cursor: pointer;
+}
+
 .mt10 {
   margin-top: 10px;
 }
